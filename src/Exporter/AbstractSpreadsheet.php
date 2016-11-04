@@ -27,6 +27,13 @@ abstract class AbstractSpreadsheet implements ExporterInterface
         return $this;
     }
 
+    public function loadArray(array $data)
+    {
+        $this->data = $data;
+        return $this;
+    }
+
+
     public function setSerialiser(SerialiserInterface $serialiser)
     {
         $this->serialiser = $serialiser;
@@ -58,12 +65,19 @@ abstract class AbstractSpreadsheet implements ExporterInterface
 
     protected function makeRows($writer)
     {
-        $headerRow = $this->serialiser->getHeaderRow();
+        //heading
+        $headerRow = $this->serialiser->getHeaderRow($this->data);
+
         if (!empty($headerRow)) {
             $writer->addRow($headerRow);
         }
+
+        //data
         foreach ($this->data as $record) {
-            $writer->addRow($this->serialiser->getData($record));
+            if(is_array($record))
+                $writer->addRow($record);
+            else
+                $writer->addRow($this->serialiser->getData($record));
         }
         return $writer;
     }
