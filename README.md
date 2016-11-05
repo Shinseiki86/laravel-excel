@@ -46,6 +46,11 @@ The exporter class is fluent, then you can also write
 return Exporter::make('Excel')->load($yourCollection)->stream($yourFileName);
 ```
 
+The expoorter class can load array instead of collection
+```
+return Exporter::make('Excel')->loadArray($yourArray)->save($yourFileNameWithPath);
+```
+
 ### Generate and save an excel file
 Add  
 ```
@@ -63,6 +68,15 @@ return $excel->save($yourFileNameWithPath);
 The exporter class is fluent, then you can also write  
 ```
 return Exporter::make('Excel')->load($yourCollection)->save($yourFileNameWithPath);
+```
+
+### Auto Heading 
+When you export your data, the package will insert array keys as the first row (like a header). use createHeadeStyle to add style on your header.
+
+### Heading style
+You can use createHeaderstyle($isBold, $fontSize, $color, $wrapText, $backgroundColor) to add style to your header
+```
+return Exporter::make('Excel')->createHeaderStyle()->load($yourCollection)->save($yourFileNameWithPath);
 ```
 
 ### Advanced usage
