@@ -11,6 +11,8 @@ Author: [Simone Todaro](https://github.com/SimoTod)
 
 Made with :heart: by [Cyber-Duck Ltd](http://www.cyber-duck.co.uk)
 
+Modified by [Messi89](https://github.com/messi89) & [OVERGEN](https://github.com/overgen)
+
 [Installation](#installation)  
 [Export Excel](#export-excel)  
 [Import Excel](#import-excel)  
