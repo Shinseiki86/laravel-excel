@@ -71,7 +71,7 @@ return Exporter::make('Excel')->load($yourCollection)->save($yourFileNameWithPat
 ```
 
 ### Auto Heading 
-When you export your data, the package will insert array keys as the first row (like a header). use createHeadeStyle to add style on your header.
+When you export your data, the exporter will insert the array keys as the first row (like a header). use createHeadeStyle to customize this row.
 
 ### Heading style
 You can use createHeaderstyle($isBold, $fontSize, $color, $wrapText, $backgroundColor) to add style to your header
