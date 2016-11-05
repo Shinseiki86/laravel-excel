@@ -1,17 +1,21 @@
 <?php
 namespace Cyberduck\LaravelExcel\Exporter;
 
+use Box\Spout\Writer\Style\Color;
+use Box\Spout\Writer\Style\StyleBuilder;
 use Illuminate\Database\Eloquent\Collection;
 use Box\Spout\Writer\WriterFactory;
 use Cyberduck\LaravelExcel\Serialiser\BasicSerialiser;
 use Cyberduck\LaravelExcel\Contract\SerialiserInterface;
 use Cyberduck\LaravelExcel\Contract\ExporterInterface;
+use Illuminate\Database\Eloquent\Model;
 
 abstract class AbstractSpreadsheet implements ExporterInterface
 {
     protected $data;
     protected $type;
     protected $serialiser;
+    protected $headerStyle = null;
 
     public function __construct()
     {
@@ -63,21 +67,43 @@ abstract class AbstractSpreadsheet implements ExporterInterface
         return WriterFactory::create($this->type);
     }
 
+    public function createHeaderStyle($isBold = true, $fontSize = 12, $color = Color::BLACK, $wrapText = false, $backgroundColor = Color::LIGHT_BLUE)
+    {
+        $style = new StyleBuilder();
+
+        if($isBold) $style = $style->setFontBold();
+
+        $style = $style->setFontSize($fontSize)
+            ->setFontColor($color);
+
+        if($wrapText) $style = $style->setShouldWrapText();
+
+        $style = $style->setBackgroundColor($backgroundColor)->build();
+
+        $this->headerStyle = $style;
+
+        return $this;
+    }
+
     protected function makeRows($writer)
     {
         //heading
         $headerRow = $this->serialiser->getHeaderRow($this->data);
 
         if (!empty($headerRow)) {
-            $writer->addRow($headerRow);
+            if($this->headerStyle != null)
+                $writer->addRowWithStyle($headerRow, $this->headerStyle);
+            else $writer->addRow($headerRow);
         }
 
         //data
         foreach ($this->data as $record) {
             if(is_array($record))
                 $writer->addRow($record);
-            else
+            elseif ($record instanceof Model)
                 $writer->addRow($this->serialiser->getData($record));
+            else
+                $writer->addRow($this->serialiser->getDataFromStdClass($record));
         }
         return $writer;
     }

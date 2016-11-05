@@ -11,6 +11,10 @@ class BasicSerialiser implements SerialiserInterface
         return $data->toArray();
     }
 
+    public function getDataFromStdClass($data) {
+        return get_object_vars($data);
+    }
+
     public function getHeaderRow(array $data=null)
     {
         if($data != null) {
